@@ -17,6 +17,8 @@ class RssSpider(scrapy.Spider):
                 "BILD_LIFESTYLE",
                 "https://www.bild.de/rssfeeds/vw-lifestyle/vw-lifestyle-16728898,dzbildplus=true,short=1,sort=1,teaserbildmobil=false,view=rss2.bild.xml",
             ),
+            ("FAZ_POLITIK", "https://www.faz.net/rss/aktuell/politik/"),
+            ("SUEDDEUTSCHE_POLITIK", "https://rss.sueddeutsche.de/rss/Politik"),
         ]:
             yield scrapy.http.Request(url, cb_kwargs={"key": key})
 
