@@ -1,13 +1,12 @@
 from datetime import datetime, timezone
 import scrapy
 
+
 class FdpSpider(scrapy.Spider):
     name = "fdp"
 
     def start_requests(self):
-        yield scrapy.http.Request(
-            "https://www.fdp.de/uebersicht/artikel"
-        )
+        yield scrapy.http.Request("https://www.fdp.de/uebersicht/artikel")
 
     def parse(self, response):
         yield {

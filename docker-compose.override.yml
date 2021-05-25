@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+
+  black:
+    image: pyfound/black:21.5b1
+    command: ["black", "."]
+    working_dir: /app
+    volumes:
+      - ./:/app
