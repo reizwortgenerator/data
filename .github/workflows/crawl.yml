@@ -1,0 +1,21 @@
+on:
+ workflow_dispatch:
+ schedule:
+  - cron: "0 10 * * *"
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: build
+      run: docker-compose -f docker-compose.yml build crawler
+    - name: crawl
+      run: |
+        tmp_file=$(mktemp)
+        docker-compose -f docker-compose.yml run --user "$(id -u):$(id -g)" --volume $tmp_file:/tmp/result.jsonlines --entrypoint=/bin/ash crawler -c "scrapy crawl --loglevel=INFO rss -o /tmp/result.jsonlines"
+        docker-compose -f docker-compose.yml run --user "$(id -u):$(id -g)" --volume $tmp_file:/tmp/result.jsonlines --entrypoint=/bin/ash crawler -c "scrapy crawl --loglevel=INFO fdp -o /tmp/result.jsonlines"
+        touch data/$(date -u +"%Y-%m-%d").jsonlines.gz;
+        gzip --stdout $tmp_file >> data/$(date -u +"%Y-%m-%d").jsonlines.gz
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: update feeds 
